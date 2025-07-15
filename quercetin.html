@@ -20,7 +20,7 @@
         layoutShowLeftPanel: false
       });
 
-      const data = await viewer.loadStructureFromUrl('quercetin.mol.txt', 'mol');
+      const data = await viewer.loadStructureFromUrl('https://raw.githubusercontent.com/theherbalmedic/theherbalmedic.github.io/main/quercetin.mol', 'mol');
       const structure = data?.structures?.[0]?.cell?.obj?.data;
       if (!structure) return;
 
