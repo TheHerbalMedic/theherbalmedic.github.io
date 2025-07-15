@@ -11,6 +11,7 @@
 </head>
 <body>
   <div id="app" style="position: absolute; top:0; right:0; bottom:0; left:0;"></div>
+
   <script>
     window.onload = async () => {
       const viewer = new molstar.Viewer('app', {
@@ -20,18 +21,27 @@
         layoutShowLeftPanel: false
       });
 
-      const data = await viewer.loadStructureFromUrl('https://raw.githubusercontent.com/theherbalmedic/theherbalmedic.github.io/main/quercetin.mol', 'mol');
-      const structure = data?.structures?.[0]?.cell?.obj?.data;
-      if (!structure) return;
+      try {
+        const data = await viewer.loadStructureFromUrl(
+          'https://raw.githubusercontent.com/theherbalmedic/theherbalmedic.github.io/main/quercetin.mol',
+          'mol'
+        );
 
-      const comp = await viewer.plugin.builders.structure.tryCreateComponentFromStructure(structure, 'quercetin');
-      if (!comp) return;
+        const structure = data?.structures?.[0]?.cell?.obj?.data;
+        if (!structure) throw new Error("Structure not loaded.");
 
-      await viewer.plugin.builders.structure.representation.addRepresentation(comp, {
-        type: 'spacefill',
-        color: { name: 'element-symbol' },
-        size: { name: 'uniform', params: { value: 1 } }
-      });
+        const comp = await viewer.plugin.builders.structure.tryCreateComponentFromStructure(structure, 'quercetin');
+        if (!comp) throw new Error("Component creation failed.");
+
+        await viewer.plugin.builders.structure.representation.addRepresentation(comp, {
+          type: 'spacefill',
+          color: { name: 'element-symbol' },
+          size: { name: 'uniform', params: { value: 1 } }
+        });
+
+      } catch (err) {
+        console.error("Mol* viewer error:", err);
+      }
     };
   </script>
 </body>
