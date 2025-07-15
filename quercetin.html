@@ -6,11 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Mol* Viewer CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/molstar@3.0.0/build/viewer/molstar.css">
-  
+  <link rel="stylesheet" href="https://unpkg.com/molstar/build/viewer/molstar.css">
+
   <style>
     html, body, #app {
       margin: 0;
+      padding: 0;
       height: 100%;
       width: 100%;
     }
@@ -21,10 +22,10 @@
   <div id="app"></div>
 
   <!-- Mol* Viewer JS -->
-  <script src="https://unpkg.com/molstar@3.0.0/build/viewer/molstar.js"></script>
+  <script src="https://unpkg.com/molstar/build/viewer/molstar.js"></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('load', () => {
       const viewer = new molstar.Viewer('app', {
         layoutIsExpanded: true,
         layoutShowControls: false,
