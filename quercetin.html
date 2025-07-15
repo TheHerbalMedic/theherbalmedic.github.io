@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Quercetin Viewer</title>
+  <title>3D Viewer: Quercetin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Mol* CSS and JS -->
-  <link rel="stylesheet" href="https://unpkg.com/molstar/build/viewer/molstar.css">
-  <script src="https://unpkg.com/molstar/build/viewer/molstar.js"></script>
+  
+  <!-- Mol* CDN -->
+  <link rel="stylesheet" href="https://unpkg.com/molstar@3.33.0/build/viewer/molstar.css">
+  <script src="https://unpkg.com/molstar@3.33.0/build/viewer/molstar.js"></script>
 </head>
 <body>
   <h1>3D Viewer: Quercetin</h1>
@@ -15,7 +15,7 @@
 
   <script>
     window.onload = async function () {
-      const viewer = new Molstar.Viewer('app', {
+      const viewer = new molstar.Viewer('app', {
         layoutIsExpanded: false
       });
 
@@ -23,15 +23,24 @@
       const structure = data?.structures?.[0]?.cell?.obj?.data;
       if (!structure) return;
 
-      const component = await viewer.plugin.builders.structure.tryCreateComponentFromStructure(structure, 'all');
-      if (!component) return;
+      // Remove default representations
+      await viewer.plugin.managers.structure.component.removeAllRepresentations();
 
-      await viewer.plugin.builders.structure.representation.addRepresentation(component, {
+      // Add Spacefill with correct colour scheme
+      const comp = await viewer.plugin.builders.structure.tryCreateComponentFromExpression(
+        structure,
+        viewer.plugin.query.structure(structure, { selection: [{ wholeStructure: true }] }),
+        'quercetin-model'
+      );
+
+      if (!comp) return;
+
+      await viewer.plugin.builders.structure.representation.addRepresentation(comp, {
         type: 'spacefill',
         color: {
           name: 'element-symbol',
           params: {
-            carbonColor: 0x808080 // grey (hex for RGB 128,128,128)
+            carbonColor: 0x808080 // grey for carbon
           }
         },
         size: {
