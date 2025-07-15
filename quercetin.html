@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Quercetin Viewer</title>
 
-  <!-- Mol* from jsDelivr CDN -->
+  <!-- ✅ Mol* CSS & JS from jsDelivr CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/molstar@3.0.0/build/viewer/molstar.css">
   <script src="https://cdn.jsdelivr.net/npm/molstar@3.0.0/build/viewer/molstar.js"></script>
 </head>
@@ -14,7 +14,9 @@
 
   <script>
     window.onload = async function () {
-      const viewer = await molstar.Viewer.create('app', { layoutIsExpanded: false });
+      const viewer = await molstar.Viewer.create('app', {
+        layoutIsExpanded: false
+      });
       await viewer.loadStructureFromUrl('quercetin.mol', 'mol');
     };
   </script>
