@@ -15,36 +15,27 @@
 
   <script>
     window.onload = async function () {
-      const viewer = new Molstar.Viewer('app', { layoutIsExpanded: false });
+      const viewer = new Molstar.Viewer('app', {
+        layoutIsExpanded: false
+      });
 
-      // Load the .mol file
       const data = await viewer.loadStructureFromUrl('quercetin.mol', 'mol');
-
       const structure = data?.structures?.[0]?.cell?.obj?.data;
       if (!structure) return;
 
-      const structureRef = viewer.plugin.managers.structure.hierarchy.current.structures[0];
+      const component = await viewer.plugin.builders.structure.tryCreateComponentFromStructure(structure, 'all');
+      if (!component) return;
 
-      // Remove default representation
-      await viewer.plugin.managers.structure.component.removeAllRepresentations();
-
-      // Add custom Spacefill component
-      const comp = await viewer.plugin.builders.structure.tryCreateComponentFromExpression(
-        structure,
-        Molstar.StructureSelection.expression.fromSelection(Molstar.StructureSelection.singleElement(structure.root)),
-        'custom-quercetin'
-      );
-
-      if (!comp) return;
-
-      await viewer.plugin.builders.structure.representation.addRepresentation(comp, {
+      await viewer.plugin.builders.structure.representation.addRepresentation(component, {
         type: 'spacefill',
         color: {
-          name: 'element-symbol', // or 'uniform' if you want one color
-          params: {}
+          name: 'element-symbol',
+          params: {
+            carbonColor: 0x808080 // grey (hex for RGB 128,128,128)
+          }
         },
         size: {
-          name: 'uniform', // or 'physical' if you want different atom sizes
+          name: 'uniform',
           params: { value: 1 }
         }
       });
