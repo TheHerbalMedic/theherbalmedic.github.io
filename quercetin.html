@@ -2,50 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>3D Viewer: Quercetin</title>
+  <title>Quercetin Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <!-- Mol* CSS and JS -->
   <link rel="stylesheet" href="https://unpkg.com/molstar@3.33.0/build/viewer/molstar.css">
   <script src="https://unpkg.com/molstar@3.33.0/build/viewer/molstar.js"></script>
 </head>
 <body>
-  <h1 style="padding: 10px;">3D Viewer: Quercetin</h1>
-  <div id="app" style="position: absolute; top: 40px; right: 0; bottom: 0; left: 0;"></div>
-
+  <div id="app" style="position: absolute; top:0; right:0; bottom:0; left:0;"></div>
   <script>
     window.onload = async () => {
-      try {
-        const viewer = new molstar.Viewer('app', {
-          layoutIsExpanded: false,
-          layoutShowControls: false,
-          layoutShowSequence: false,
-          layoutShowLeftPanel: false
-        });
+      const viewer = new molstar.Viewer('app', {
+        layoutIsExpanded: false,
+        layoutShowControls: false,
+        layoutShowSequence: false,
+        layoutShowLeftPanel: false
+      });
 
-        const data = await viewer.loadStructureFromUrl('quercetin.mol', 'mol');
+      const data = await viewer.loadStructureFromUrl('quercetin.mol.txt', 'mol');
+      const structure = data?.structures?.[0]?.cell?.obj?.data;
+      if (!structure) return;
 
-        const structure = data?.structures?.[0]?.cell?.obj?.data;
-        if (!structure) {
-          console.error("Structure data not found.");
-          return;
-        }
+      const comp = await viewer.plugin.builders.structure.tryCreateComponentFromStructure(structure, 'quercetin');
+      if (!comp) return;
 
-        const comp = await viewer.plugin.builders.structure.tryCreateComponentFromStructure(structure, 'quercetin');
-        if (!comp) {
-          console.error("Failed to create component from structure.");
-          return;
-        }
-
-        await viewer.plugin.builders.structure.representation.addRepresentation(comp, {
-          type: 'spacefill',
-          color: { name: 'element-symbol' },
-          size: { name: 'uniform', params: { value: 1 } }
-        });
-
-      } catch (err) {
-        console.error("❌ Viewer initialization failed:", err);
-        alert("Something went wrong loading the molecule.");
-      }
+      await viewer.plugin.builders.structure.representation.addRepresentation(comp, {
+        type: 'spacefill',
+        color: { name: 'element-symbol' },
+        size: { name: 'uniform', params: { value: 1 } }
+      });
     };
   </script>
 </body>
