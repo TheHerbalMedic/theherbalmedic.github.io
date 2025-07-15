@@ -5,12 +5,29 @@
   <title>Quercetin Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Load Mol* CSS and JS -->
+  <!-- Mol* CSS and JS -->
   <link rel="stylesheet" href="https://unpkg.com/molstar@3.33.0/build/viewer/molstar.css">
   <script src="https://unpkg.com/molstar@3.33.0/build/viewer/molstar.js"></script>
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    #app {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+  </style>
 </head>
 <body>
-  <div id="app" style="position: absolute; top:0; right:0; bottom:0; left:0;"></div>
+  <div id="app"></div>
+
   <script>
     window.onload = async () => {
       const viewer = new molstar.Viewer('app', {
@@ -20,16 +37,13 @@
         layoutShowLeftPanel: false
       });
 
-      // Load the structure
       const data = await viewer.loadStructureFromUrl('quercetin.mol', 'mol');
       const structure = data?.structures?.[0]?.cell?.obj?.data;
       if (!structure) return;
 
-      // Create a component for the whole structure
       const comp = await viewer.plugin.builders.structure.tryCreateComponentFromStructure(structure, 'quercetin');
       if (!comp) return;
 
-      // Add a spacefill representation
       await viewer.plugin.builders.structure.representation.addRepresentation(comp, {
         type: 'spacefill',
         color: { name: 'element-symbol' },
