@@ -4,8 +4,13 @@
   <meta charset="UTF-8">
   <title>Quercetin Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Mol* Viewer CSS -->
   <link rel="stylesheet" href="https://unpkg.com/molstar@3.0.0/build/viewer/molstar.css">
+  
+  <!-- Mol* Viewer JS -->
   <script src="https://unpkg.com/molstar@3.0.0/build/viewer/molstar.js"></script>
+
   <style>
     html, body, #app {
       margin: 0;
@@ -14,24 +19,28 @@
     }
   </style>
 </head>
+
 <body>
   <div id="app"></div>
-  <script>
-    const viewer = new Molstar.Viewer('app', {
-      layoutIsExpanded: true,
-      layoutShowControls: false,
-      layoutShowRemoteState: false,
-      layoutShowSequence: true,
-      layoutShowLog: false,
-      layoutShowLeftPanel: true
-    });
 
-    fetch('quercetin.mol')
-  .then(response => response.text())
-  .then(data => {
-    const structure = viewer.loadStructureFromData(data, 'mol');
-  })
-  .catch(error => console.error('Failed to load mol file:', error));
+  <script>
+    window.onload = function () {
+      const viewer = new Molstar.Viewer('app', {
+        layoutIsExpanded: true,
+        layoutShowControls: false,
+        layoutShowRemoteState: false,
+        layoutShowSequence: true,
+        layoutShowLog: false,
+        layoutShowLeftPanel: true
+      });
+
+      fetch('quercetin.mol')
+        .then(response => response.text())
+        .then(data => {
+          viewer.loadStructureFromData(data, 'mol');
+        })
+        .catch(error => console.error('Failed to load mol file:', error));
+    };
   </script>
 </body>
 </html>
