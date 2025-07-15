@@ -26,7 +26,12 @@
       layoutShowLeftPanel: true
     });
 
-    viewer.loadStructureFromUrl('quercetin.mol', 'mol');
+    fetch('quercetin.mol')
+  .then(response => response.text())
+  .then(data => {
+    const structure = viewer.loadStructureFromData(data, 'mol');
+  })
+  .catch(error => console.error('Failed to load mol file:', error));
   </script>
 </body>
 </html>
