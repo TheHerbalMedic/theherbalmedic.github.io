@@ -4,14 +4,16 @@
   <meta charset="UTF-8">
   <title>Quercetin Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  
   <!-- Mol* Viewer CSS -->
   <link rel="stylesheet" href="https://unpkg.com/molstar/build/viewer/molstar.css">
+  
+  <!-- Mol* Viewer JS -->
+  <script src="https://unpkg.com/molstar/build/viewer/molstar.js"></script>
 
   <style>
     html, body, #app {
       margin: 0;
-      padding: 0;
       height: 100%;
       width: 100%;
     }
@@ -21,12 +23,9 @@
 <body>
   <div id="app"></div>
 
-  <!-- Mol* Viewer JS -->
-  <script src="https://unpkg.com/molstar/build/viewer/molstar.js"></script>
-
   <script>
-    window.addEventListener('load', () => {
-      const viewer = new molstar.Viewer('app', {
+    window.onload = function () {
+      const viewer = new Molstar.Viewer('app', {
         layoutIsExpanded: true,
         layoutShowControls: false,
         layoutShowRemoteState: false,
@@ -36,10 +35,18 @@
       });
 
       fetch('quercetin.mol')
-        .then(response => response.text())
+        .then(response => {
+          if (!response.ok) throw new Error('File not found or inaccessible');
+          return response.text();
+        })
         .then(data => {
           viewer.loadStructureFromData(data, 'mol');
         })
+        .catch(error => console.error('Failed to load mol file:', error));
+    };
+  </script>
+</body>
+</html>
         .catch(error => console.error('Failed to load mol file:', error));
     });
   </script>
