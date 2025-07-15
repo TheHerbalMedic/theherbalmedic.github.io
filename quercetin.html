@@ -5,49 +5,27 @@
   <title>Quercetin Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Mol* CSS and JS -->
-  <link rel="stylesheet" href="https://unpkg.com/molstar/build/viewer/molstar.css">
-  <script src="https://unpkg.com/molstar/build/viewer/molstar.js"></script>
+  <!-- Load Mol* CSS and JS -->
+  <link rel="stylesheet" href="https://unpkg.com/molstar@3.33.0/build/viewer/molstar.css">
+  <script src="https://unpkg.com/molstar@3.33.0/build/viewer/molstar.js"></script>
 </head>
 <body>
-  <h1>3D Viewer: Quercetin</h1>
-  <div id="app" style="width: 100%; height: 600px;"></div>
-
+  <div id="app" style="position: absolute; top:0; right:0; bottom:0; left:0;"></div>
   <script>
-    window.onload = async function () {
-      const viewer = new Molstar.Viewer('app', { layoutIsExpanded: false });
-
-      // Load the .mol file
-      const data = await viewer.loadStructureFromUrl('quercetin.mol', 'mol');
-
-      const structure = data?.structures?.[0]?.cell?.obj?.data;
-      if (!structure) return;
-
-      const structureRef = viewer.plugin.managers.structure.hierarchy.current.structures[0];
-
-      // Remove default representation
-      await viewer.plugin.managers.structure.component.removeAllRepresentations();
-
-      // Add custom Spacefill component
-      const comp = await viewer.plugin.builders.structure.tryCreateComponentFromExpression(
-        structure,
-        Molstar.StructureSelection.expression.fromSelection(Molstar.StructureSelection.singleElement(structure.root)),
-        'custom-quercetin'
-      );
-
-      if (!comp) return;
-
-      await viewer.plugin.builders.structure.representation.addRepresentation(comp, {
-        type: 'spacefill',
-        color: {
-          name: 'element-symbol', // or 'uniform' if you want one color
-          params: {}
-        },
-        size: {
-          name: 'uniform', // or 'physical' if you want different atom sizes
-          params: { value: 1 }
-        }
+    window.onload = async () => {
+      const viewer = new molstar.Viewer('app', {
+        layoutIsExpanded: false,
+        layoutShowControls: false,
+        layoutShowSequence: false,
+        layoutShowLeftPanel: false
       });
+      await viewer.loadStructureFromUrl('quercetin.mol', 'mol');
+      await viewer.plugin.managers.structure.component.removeAllRepresentations();
+      await viewer.plugin.builders.structure.representation.addRepresentation(
+        viewer.plugin.managers.structure.hierarchy.current.structures[0],
+        'spacefill',
+        { color: { name: 'element-symbol', params: {} }, size: { name: 'uniform', params: { value: 1 } } }
+      );
     };
   </script>
 </body>
