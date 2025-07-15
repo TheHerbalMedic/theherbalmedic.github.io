@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Quercetin 3D Viewer</title>
+  <title>Quercetin Viewer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Correct Mol* CDN -->
-  <link rel="stylesheet" href="https://unpkg.com/molstar/build/viewer/molstar.css">
-  <script src="https://unpkg.com/molstar/build/viewer/molstar.js"></script>
+  <!-- mol* Viewer CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/molstar@3.0.0/build/viewer/molstar.css" />
+
+  <!-- mol* Viewer JS -->
+  <script src="https://cdn.jsdelivr.net/npm/molstar@3.0.0/build/viewer/molstar.js"></script>
 
   <style>
     html, body, #app {
       margin: 0;
+      padding: 0;
       height: 100%;
       width: 100%;
     }
@@ -21,10 +24,10 @@
   <div id="app"></div>
 
   <script>
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('load', () => {
       const viewer = new molstar.Viewer('app', {
         layoutIsExpanded: true,
-        layoutShowControls: false,
+        layoutShowControls: true,
         layoutShowRemoteState: false,
         layoutShowSequence: true,
         layoutShowLog: false,
@@ -32,16 +35,11 @@
       });
 
       fetch('quercetin.mol')
-        .then(response => {
-          if (!response.ok) throw new Error('Could not load MOL file');
-          return response.text();
-        })
+        .then(response => response.text())
         .then(data => {
           viewer.loadStructureFromData(data, 'mol');
         })
-        .catch(err => {
-          console.error('Loading error:', err);
-        });
+        .catch(error => console.error('Failed to load mol file:', error));
     });
   </script>
 </body>
