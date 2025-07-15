@@ -19,13 +19,22 @@
         layoutShowSequence: false,
         layoutShowLeftPanel: false
       });
-      await viewer.loadStructureFromUrl('quercetin.mol', 'mol');
-      await viewer.plugin.managers.structure.component.removeAllRepresentations();
-      await viewer.plugin.builders.structure.representation.addRepresentation(
-        viewer.plugin.managers.structure.hierarchy.current.structures[0],
-        'spacefill',
-        { color: { name: 'element-symbol', params: {} }, size: { name: 'uniform', params: { value: 1 } } }
-      );
+
+      // Load the structure
+      const data = await viewer.loadStructureFromUrl('quercetin.mol', 'mol');
+      const structure = data?.structures?.[0]?.cell?.obj?.data;
+      if (!structure) return;
+
+      // Create a component for the whole structure
+      const comp = await viewer.plugin.builders.structure.tryCreateComponentFromStructure(structure, 'quercetin');
+      if (!comp) return;
+
+      // Add a spacefill representation
+      await viewer.plugin.builders.structure.representation.addRepresentation(comp, {
+        type: 'spacefill',
+        color: { name: 'element-symbol' },
+        size: { name: 'uniform', params: { value: 1 } }
+      });
     };
   </script>
 </body>
